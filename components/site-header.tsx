@@ -2,12 +2,7 @@
 
 import BrandLogo from './brand-logo';
 import { ChevronDown, Menu, X } from 'lucide-react';
-import { useRef, useState } from 'react';
-import gsap from 'gsap';
-import { useGSAP } from '@gsap/react';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-if (typeof window !== 'undefined') gsap.registerPlugin(useGSAP, ScrollTrigger);
+import { useEffect, useRef, useState } from 'react';
 
 const services = ['Acceleration sprints', 'Efficient development', 'Specialists on demand', 'Data & AI'];
 
@@ -18,51 +13,54 @@ export default function SiteHeader({ onContact, onServiceSelect }: Props) {
   const toggle = useRef<HTMLButtonElement>(null);
   const servicesToggle = useRef<HTMLButtonElement>(null);
   const pointerType = useRef('mouse');
-  const [compact, setCompact] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const [mobile, setMobile] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
 
-  useGSAP(() => {
-    const header = root.current!;
-    const update = (trigger: ScrollTrigger) => {
-      const folded = trigger.scroll() >= trigger.start;
-      setCompact(folded);
-      if (folded && document.activeElement?.closest('#site-navigation') &&
-          document.activeElement.matches(':focus-visible')) setMenuOpen(true);
+  useEffect(() => {
+    let anchor = window.scrollY;
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const current = Math.max(0, window.scrollY);
+      if (current < 80) setHidden(false);
+      else if (Math.abs(current - anchor) >= 8) {
+        const goingDown = current > anchor;
+        setHidden(goingDown);
+        if (goingDown) { setMobile(false); setServicesOpen(false); }
+      }
+      if (Math.abs(current - anchor) >= 8 || current < 80) anchor = current;
     };
-    ScrollTrigger.create({
-      start: 48, end: 'max',
-      onEnter: update, onLeaveBack: update, onRefresh: update,
-    });
+    const onScroll = () => { if (!frame) frame = requestAnimationFrame(update); };
     const onOutside = (event: PointerEvent) => {
-      if (!header.contains(event.target as Node)) { setMenuOpen(false); setServicesOpen(false); }
+      if (!root.current?.contains(event.target as Node)) { setMobile(false); setServicesOpen(false); }
     };
     const onEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         if (root.current?.querySelector('.floating-nav.is-open')) toggle.current?.focus();
         else if (root.current?.querySelector('.floating-dropdown')) servicesToggle.current?.focus();
-        setMenuOpen(false);
+        setMobile(false);
         setServicesOpen(false);
       }
     };
+    window.addEventListener('scroll', onScroll, { passive: true });
     document.addEventListener('pointerdown', onOutside);
     document.addEventListener('keydown', onEscape);
     return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', onScroll);
       document.removeEventListener('pointerdown', onOutside);
       document.removeEventListener('keydown', onEscape);
     };
-  }, { scope: root });
+  }, []);
 
-  const close = () => { setMenuOpen(false); setServicesOpen(false); };
+  const close = () => { setMobile(false); setServicesOpen(false); };
 
-  return <header ref={root} className={`floating-header ${compact ? 'is-compact' : ''}`}>
+  return <header ref={root} className={`floating-header ${hidden ? 'is-hidden' : ''}`} onFocusCapture={() => setHidden(false)}>
     <a className="floating-brand" href="#main" aria-label="Milten Studio home" onClick={close}>
       <BrandLogo />
     </a>
-    <button ref={toggle} className="floating-menu-toggle" aria-label={menuOpen ? 'Close navigation' : 'Open navigation'} aria-expanded={menuOpen} aria-controls="site-navigation" onClick={() => setMenuOpen(open => !open)}>
-      {menuOpen ? <X size={22} /> : <Menu size={22} />}
-    </button>
-    <nav id="site-navigation" aria-label="Main navigation" className={`floating-nav ${menuOpen ? 'is-open' : ''}`}>
+    <nav id="site-navigation" aria-label="Main navigation" className={`floating-nav ${mobile ? 'is-open' : ''}`}>
       <a href="#cases" onClick={close}>Case studies</a>
       <div className="floating-services"
         onPointerEnter={event => { if (event.pointerType === 'mouse') setServicesOpen(true); }}
@@ -90,9 +88,9 @@ export default function SiteHeader({ onContact, onServiceSelect }: Props) {
       <a href="#promise" onClick={close}>How we deliver</a>
       <a href="#footer" onClick={close}>About</a>
     </nav>
-    <div className="floating-actions">
-      <button className="floating-contact-link" onClick={() => { close(); onContact(); }}>Contact</button>
-      <button className="floating-contact" onClick={() => { close(); onContact(); }}>Get started</button>
-    </div>
+    <button className="floating-contact" onClick={() => { close(); onContact(); }}>Get in touch</button>
+    <button ref={toggle} className="floating-menu-toggle" aria-label={mobile ? 'Close navigation' : 'Open navigation'} aria-expanded={mobile} aria-controls="site-navigation" onClick={() => setMobile(!mobile)}>
+      {mobile ? <X size={22} /> : <Menu size={22} />}
+    </button>
   </header>;
 }

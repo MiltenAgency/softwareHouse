@@ -62,14 +62,14 @@ export default function CaseStudies() {
   return <section ref={root} className="cases content-pad" id="cases">
     <div className="case-heading flex justify-between">
       <h2>Effective software<br/>development</h2>
-      <div className="case-intro"><p>Explore product ideas across<br/>finance, travel, and everyday life</p><a className="dark-button" href="#case-grid">Go to cases</a></div>
+      <div className="case-intro"><p>160+ product development teams made<br/>their product competitive with our help</p><a className="dark-button" href="#case-grid">Go to cases</a></div>
     </div>
     <div className="case-timeline" id="case-grid">
       <div className="case-timeline-axis" aria-hidden="true"><span className="case-timeline-fill" /></div>
       <ol className="case-timeline-list">
         {cases.map((item, index) => <li className="case-timeline-row" key={item.image}>
           <span className="case-timeline-marker" aria-hidden="true">0{index + 1}</span>
-          <a className="case-card case-timeline-card" href="#footer" aria-label={`Discuss a project like ${item.client}`}>
+          <a className="case-card case-timeline-card" href="https://tsh.io/portfolio" target="_blank" rel="noreferrer">
             <div className="case-timeline-media"><Image src={`/images/${item.image}-cutout.webp`} width={item.width} height={item.height} alt={item.alt} sizes="(max-width: 700px) 85vw, 40vw" /></div>
             <h3>→ {item.lead}<span>{item.rest}</span></h3><small>{item.client}</small>
           </a>
