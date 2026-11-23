@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none">
+  <rect width="64" height="64" rx="16" fill="#151A18"/>
+  <defs>
+    <mask id="flow" maskUnits="userSpaceOnUse" x="8" y="12" width="48" height="44">
+      <path fill="white" d="M8 12h48v44H8z"/>
+      <path d="M8 43C22 51 34 33 56 42" stroke="black" stroke-width="3"/>
+    </mask>
+  </defs>
+  <path d="M15 49V33C15 18 32 18 32 33V49M32 33C32 18 49 18 49 33V49" stroke="white" stroke-width="9" mask="url(#flow)"/>
+</svg>

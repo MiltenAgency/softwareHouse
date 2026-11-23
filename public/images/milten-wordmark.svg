@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="412" height="104" viewBox="0 0 412 104" fill="none">
+  <title>Milten Studio</title>
+  <defs>
+    <mask id="flow" maskUnits="userSpaceOnUse" x="0" y="0" width="412" height="104">
+      <path fill="white" d="M0 0h412v104H0z"/>
+      <path d="M-8 72C32 94 65 53 106 71S169 91 210 71 270 53 312 72 374 90 420 67" stroke="black" stroke-width="6"/>
+    </mask>
+  </defs>
+  <g fill="#151A18" mask="url(#flow)">
+    <path d="M12 92V60C12 27 56 27 56 60V92M56 60C56 27 100 27 100 60V92" stroke="#151A18" stroke-width="22" fill="none"/>
+    <circle cx="142" cy="15" r="12"/>
+    <path d="M131 36h22v56h-22z"/>
+    <path d="M179 8V70Q179 92 200 92H205M224 16V70Q224 92 245 92H250" stroke="#151A18" stroke-width="22" fill="none"/>
+    <path d="M205 33h45v19h-45z"/>
+    <path fill-rule="evenodd" d="M330 68H282C284 77 291 81 302 81C311 81 319 79 326 75V91C318 95 309 97 299 97C275 97 260 83 260 64C260 45 274 31 295 31C316 31 330 45 330 64V68ZM282 55H309C308 48 303 45 296 45C289 45 284 48 282 55Z"/>
+    <path d="M355 92V60C355 27 399 27 399 60V92" stroke="#151A18" stroke-width="22" fill="none"/>
+    <path d="M344 36h22v29h-22z"/>
+  </g>
+</svg>

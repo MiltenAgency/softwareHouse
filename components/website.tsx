@@ -7,6 +7,7 @@ import HeroArtwork from './hero-artwork';
 import SiteHeader from './site-header';
 import SiteFooter from './site-footer';
 import CaseStudies from './case-studies';
+import SectionStack, { StackChapter } from './section-stack';
 import { useServiceRotation } from './use-service-rotation';
 
 const services = [
@@ -24,20 +25,28 @@ function Contact({ close }: { close: () => void }) {
 export default function Website() {
  const [active,setActive]=useState<number | null>(null), [contact,setContact]=useState(false);
  const servicesRoot = useRef<HTMLDivElement>(null);
+ const promiseReadingSpace = useRef<HTMLDivElement>(null);
  const [servicesHovered, setServicesHovered] = useState(false);
  const [servicesFocused, setServicesFocused] = useState(false);
  const advanceService = useCallback(() => setActive(current => current === null ? 0 : (current + 1) % services.length), []);
  const serviceRotation = useServiceRotation(servicesRoot, advanceService, servicesHovered || servicesFocused || contact);
- return <><a className="skip-link" href="#main">Skip to content</a><SiteHeader onContact={()=>setContact(true)} onServiceSelect={setActive}/><main id="main" className="site-shell">
+ return <><a className="skip-link" href="#main">Skip to content</a><SiteHeader onContact={()=>setContact(true)} onServiceSelect={setActive}/><SectionStack><main id="main" className="site-shell">
+ <StackChapter index={0} tone="hero">
  <div className="intro-area">
  <section className="hero" aria-labelledby="hero-title">
  <HeroArtwork/>
 
- <div className="hero-copy"><h1 id="hero-title">Build with confidence<br/>and deliver on time</h1><p className="hero-description">Bring your product ambitions to life with a team that works alongside yours. From shaping the first idea and modernizing existing platforms to solving delivery bottlenecks, we help you turn complex requirements into reliable software, build with confidence, and keep your next release moving forward.</p><div className="hero-bottom flex items-center justify-between"><a href="#services" className="hero-promise flex items-center"><span>Unlock development capacity, remove biggest<br/> delivery blockers and see your key metrics improve</span><ArrowRight/><span>All without refocusing<br/> your core team</span></a><a className="rating" href="https://clutch.co/profile/software-house" target="_blank" rel="noreferrer"><span>4.8 / 5 <b>★★★★★</b></span><span>Impartial reviews on <strong>clutch.co</strong></span></a></div></div>
+ <div className="hero-copy"><h1 id="hero-title">Build with confidence<br/>and deliver on time</h1><p className="hero-description">Bring your product ambitions to life with a team that works alongside yours. From shaping the first idea and modernizing existing platforms to solving delivery bottlenecks, we help you turn complex requirements into reliable software, build with confidence, and keep your next release moving forward.</p><div className="hero-bottom flex items-center justify-between"><a href="#services" className="hero-promise flex items-center"><span>Unlock development capacity, remove biggest<br/> delivery blockers and see your key metrics improve</span><ArrowRight/><span>All without refocusing<br/> your core team</span></a><a className="rating" href="#cases"><span>Strategy · Design · Engineering</span><span>Explore our <strong>selected work</strong></span></a></div></div>
  </section>
- <section className="clients" aria-label="Our clients"><p>TRUSTED BY 160+ PRODUCT DEVELOPMENT TEAMS</p><ClientLogos/></section>
- <ScrollPromise/>
  </div>
+ </StackChapter>
+ <StackChapter index={1} tone="clients">
+ <section className="clients" aria-label="Our clients"><p>BUILT AROUND AMBITIOUS PRODUCT TEAMS</p><ClientLogos/></section>
+ </StackChapter>
+ <StackChapter index={2} tone="promise" holdScreens={2} readingSpaceRef={promiseReadingSpace}>
+ <ScrollPromise readingSpace={promiseReadingSpace}/>
+ </StackChapter>
+ <StackChapter index={3} tone="services">
  <section className="services content-pad" id="services"><div className="section-heading flex justify-between"><h2>See tangible<br/>outcomes</h2><span className="eyebrow">WHAT WE DO</span></div><div
    ref={servicesRoot}
    className="service-list"
@@ -64,6 +73,7 @@ export default function Website() {
    </div>
    {serviceRotation && active === i && <span key={`timer-${active}`} className="service-cycle-progress" aria-hidden="true" />}
  </article>)}</div></section>
- <CaseStudies/>
- </main><SiteFooter onContact={()=>setContact(true)} onServiceSelect={setActive}/>{contact&&<Contact close={()=>setContact(false)}/>}</>;
+ </StackChapter>
+ <StackChapter index={4} tone="cases"><CaseStudies/></StackChapter>
+ </main><StackChapter index={5} tone="footer"><SiteFooter onContact={()=>setContact(true)} onServiceSelect={setActive}/></StackChapter></SectionStack>{contact&&<Contact close={()=>setContact(false)}/>}</>;
 }
